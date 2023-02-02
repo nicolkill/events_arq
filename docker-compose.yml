@@ -1,0 +1,36 @@
+version: '3.4'
+services:
+  web:
+    build:
+      context: ./front/
+    volumes:
+      - ./front:/app
+    ports:
+      - 3000:3000
+    environment:
+      REACT_APP_API_URL: "http://localhost:4000"
+
+  app:
+    build:
+      context: ./api/
+    volumes:
+      - ./api:/app
+    depends_on:
+      - db
+    ports:
+      - 4000:4000
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DATABASE: postgres
+      POSTGRES_HOSTNAME: db
+
+  db:
+    image: postgres:13.3-alpine
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432:5432
