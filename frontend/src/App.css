@@ -28,6 +28,15 @@
   color: #61dafb;
 }
 
+.uploaded {
+  color: white;
+  margin-top: 1rem;
+  padding: 0.1rem 2rem;
+  font-size: 3rem;
+  background-color: forestgreen;
+  border-radius: 0.5rem;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

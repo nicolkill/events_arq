@@ -30,3 +30,9 @@ by an BroadwayWorker and notify with PhoenixChannels to all the connected fronte
 
 - Maketool (Installed on Linux and MacOSX)
 - Docker
+
+To ensure Localstack can be reached from the frontend, add this to your `/etc/hosts` file
+
+```
+127.0.0.1 localstack
+```

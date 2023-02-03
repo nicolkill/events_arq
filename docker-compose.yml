@@ -1,31 +1,41 @@
 version: '3.4'
 services:
-  web:
+  frontend:
     build:
-      context: ./front/
+      context: ./frontend/
     volumes:
-      - ./front:/app
+      - ./frontend:/app
+    depends_on:
+      - backend
     ports:
       - 3000:3000
     environment:
       REACT_APP_API_URL: "http://localhost:4000"
 
-  app:
+  backend:
     build:
-      context: ./api/
+      context: ./backend/
     volumes:
-      - ./api:/app
+      - ./backend:/app
     depends_on:
-      - db
+      - postgres
     ports:
       - 4000:4000
     environment:
+      # db config
       POSTGRES_USERNAME: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DATABASE: postgres
-      POSTGRES_HOSTNAME: db
+      POSTGRES_HOSTNAME: postgres
+      # aws config
+      AWS_S3_PORT: 4566
+      AWS_S3_BUCKET: files
+      AWS_S3_URL: localstack
+      AWS_S3_REGION: us-west-2
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
 
-  db:
+  postgres:
     image: postgres:13.3-alpine
     environment:
       POSTGRES_DB: postgres
@@ -34,3 +44,22 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - 5432:5432
+
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - 4566:4566
+    environment:
+      # own env vars
+      BUCKET_NAME: files
+      DEFAULT_REGION: us-west-2
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      # service env vars
+      SERVICES: s3
+      DISABLE_CORS_CHECKS: 1
+      PROVIDER_OVERRIDE_S3: asf
+      S3_SKIP_SIGNATURE_VALIDATION: 1
+    volumes:
+      - ./.localstack:/var/lib/localstack
+      - ./init_localstack.sh:/etc/localstack/init/ready.d/init_localstack.sh

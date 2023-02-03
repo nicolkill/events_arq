@@ -10,6 +10,8 @@ defmodule EventsArqBackendWeb.Endpoint do
     signing_salt: "6Gy9K6yk"
   ]
 
+  plug CORSPlug
+
   # socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.

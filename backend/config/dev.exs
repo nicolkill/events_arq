@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :events_arq_backend, EventsArqBackend.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "events_arq_backend_dev",
+  username: System.get_env("POSTGRES_USERNAME"),
+  password: System.get_env("POSTGRES_PASSWORD"),
+  hostname: System.get_env("POSTGRES_HOSTNAME"),
+  database: System.get_env("POSTGRES_DATABASE"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -19,7 +19,7 @@ config :events_arq_backend, EventsArqBackend.Repo,
 config :events_arq_backend, EventsArqBackendWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
@@ -56,6 +56,13 @@ config :logger, :console, format: "[$level] $message\n"
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20
+
+config :ex_aws, :s3,
+  scheme: "http://",
+  region: System.get_env("AWS_S3_REGION"),
+  host: System.get_env("AWS_S3_URL"),
+  port: System.get_env("AWS_S3_PORT"),
+  bucket: System.get_env("AWS_S3_BUCKET")
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
