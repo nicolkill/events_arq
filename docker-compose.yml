@@ -7,6 +7,7 @@ services:
       - ./frontend:/app
     depends_on:
       - backend
+      - localstack
     ports:
       - 3000:3000
     environment:
@@ -19,6 +20,7 @@ services:
       - ./backend:/app
     depends_on:
       - postgres
+      - localstack
     ports:
       - 4000:4000
     environment:
@@ -28,12 +30,14 @@ services:
       POSTGRES_DATABASE: postgres
       POSTGRES_HOSTNAME: postgres
       # aws config
-      AWS_S3_PORT: 4566
-      AWS_S3_BUCKET: files
-      AWS_S3_URL: localstack
-      AWS_S3_REGION: us-west-2
+      AWS_PORT: 4566
+      AWS_HOST: localstack
+      AWS_REGION: us-west-2
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
+      AWS_S3_BUCKET: files
+      AWS_SQS_NEW_FILES_QUEUE: new_files_queue
+      AWS_SQS_GENERAL_EVENTS_QUEUE: general_events_queue
 
   postgres:
     image: postgres:13.3-alpine
@@ -52,11 +56,13 @@ services:
     environment:
       # own env vars
       BUCKET_NAME: files
+      BUCKET_QUEUE: new_files_queue
+      QUEUES: general_events_queue,example_queue
+      # service env vars
       DEFAULT_REGION: us-west-2
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
-      # service env vars
-      SERVICES: s3
+      SERVICES: s3,sqs
       DISABLE_CORS_CHECKS: 1
       PROVIDER_OVERRIDE_S3: asf
       S3_SKIP_SIGNATURE_VALIDATION: 1

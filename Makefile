@@ -5,23 +5,23 @@ up:
 up_build:
 	docker compose up --build
 
-testing:
-	docker compose run --rm -e "MIX_ENV=test" app mix test
+backend-test:
+	docker compose run --rm -e "MIX_ENV=test" backend mix test
 
-iex:
-	docker compose exec app iex -S mix
+backend-iex:
+	docker compose exec backend iex -S mix
 
-bash:
-	docker compose exec app sh
+backend-bash:
+	docker compose exec backend sh
 
-routes:
-	docker compose exec app mix phx.routes
+backend-routes:
+	docker compose exec backend mix phx.routes
 
-rollback:
-	docker compose exec app mix ecto.rollback
+backend-rollback:
+	docker compose exec backend mix ecto.rollback
 
-migrate:
-	docker compose exec app mix ecto.migrate
+backend-migrate:
+	docker compose exec backend mix ecto.migrate
 
-format:
-	docker compose exec app mix format
+backend-format:
+	docker compose exec backend mix format

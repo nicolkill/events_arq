@@ -15,9 +15,11 @@ defmodule EventsArqBackend.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: EventsArqBackend.PubSub},
       # Start the Endpoint (http/https)
-      EventsArqBackendWeb.Endpoint
+      EventsArqBackendWeb.Endpoint,
       # Start a worker by calling: EventsArqBackend.Worker.start_link(arg)
-      # {EventsArqBackend.Worker, arg}
+      # {EventsArqBackend.Worker, arg},
+      {EventsArqBackend.QueueWorkers.BroadwayNewFileEvents, []},
+      {EventsArqBackend.QueueWorkers.BroadwayGeneralEvents, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

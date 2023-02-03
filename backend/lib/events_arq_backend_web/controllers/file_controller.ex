@@ -3,7 +3,7 @@ defmodule EventsArqBackendWeb.FileController do
   use EventsArqBackendWeb, :controller
 
   alias EventsArqBackend.Generator
-  alias EventsArqBackend.S3Client
+  alias EventsArqBackend.AWS.S3Client
 
   # 30 mins
   @presigned_upload_url_max_age 60 * 30

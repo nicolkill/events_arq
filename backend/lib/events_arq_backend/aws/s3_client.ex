@@ -1,4 +1,4 @@
-defmodule EventsArqBackend.S3Client do
+defmodule EventsArqBackend.AWS.S3Client do
   @moduledoc false
 
   defmacrop is_prod, do: Mix.env() == :prod

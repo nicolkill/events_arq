@@ -8,5 +8,4 @@ defmodule EventsArqBackendWeb.FileView do
       url: url
     }
   end
-
 end

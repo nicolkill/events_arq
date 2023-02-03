@@ -1,5 +1,14 @@
 import Config
 
+defmodule RuntimeUtil do
+  def get_env_or_raise_error(var_name),
+    do:
+      System.get_env(var_name) ||
+        raise("""
+        environment variable #{var_name} is missing.
+        """)
+end
+
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
 # system starts, so it is typically used to load production configuration
@@ -25,29 +34,29 @@ if config_env() == :prod do
 
   config :events_arq_backend, EventsArqBackend.Repo,
     # ssl: true,
-    username: System.get_env("POSTGRES_USERNAME"),
-    password: System.get_env("POSTGRES_PASSWORD"),
-    hostname: System.get_env("POSTGRES_HOSTNAME"),
-    database: System.get_env("POSTGRES_DATABASE"),
+    username: RuntimeUtil.get_env_or_raise_error("POSTGRES_USERNAME"),
+    password: RuntimeUtil.get_env_or_raise_error("POSTGRES_PASSWORD"),
+    hostname: RuntimeUtil.get_env_or_raise_error("POSTGRES_HOSTNAME"),
+    database: RuntimeUtil.get_env_or_raise_error("POSTGRES_DATABASE"),
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
-
 
   config :ex_aws, :s3,
     region: RuntimeUtil.get_env_or_raise_error("AWS_REGION"),
     bucket: RuntimeUtil.get_env_or_raise_error("AWS_S3_BUCKET")
+
+  config :ex_aws, :sqs,
+    region: RuntimeUtil.get_env_or_raise_error("AWS_REGION"),
+    base_queue_url: RuntimeUtil.get_env_or_raise_error("AWS_BASE_QUEUE_URL"),
+    new_files_queue: RuntimeUtil.get_env_or_raise_error("AWS_SQS_NEW_FILES_QUEUE"),
+    general_events_queue: RuntimeUtil.get_env_or_raise_error("AWS_SQS_GENERAL_EVENTS_QUEUE")
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
   # want to use a different value for prod and you most likely don't want
   # to check this value into version control, so we use an environment
   # variable instead.
-  secret_key_base =
-    System.get_env("SECRET_KEY_BASE") ||
-      raise """
-      environment variable SECRET_KEY_BASE is missing.
-      You can generate one by calling: mix phx.gen.secret
-      """
+  secret_key_base = RuntimeUtil.get_env_or_raise_error("SECRET_KEY_BASE")
 
   port = String.to_integer(System.get_env("PORT") || "4000")
 

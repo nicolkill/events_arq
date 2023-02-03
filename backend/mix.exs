@@ -44,7 +44,10 @@ defmodule EventsArqBackend.MixProject do
       {:cors_plug, "~> 3.0"},
       {:hackney, "~> 1.9"},
       {:ex_aws, "~> 2.1"},
-      {:ex_aws_s3, "~> 2.0"}
+      {:ex_aws_s3, "~> 2.0"},
+      {:broadway, "~> 1.0"},
+      {:broadway_sqs, "~> 0.7.0"},
+      {:httpoison, "~> 2.0"}
     ]
   end
 

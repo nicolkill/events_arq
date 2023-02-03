@@ -32,7 +32,7 @@ function App() {
 
     if (response.ok && response.status >= 200 && response.status < 300) {
       setUploaded(true);
-      setTimeout(setUploaded.bind(this, false), 5000);
+      setTimeout(setUploaded.bind(this, false), 10000);
     }
   };
 

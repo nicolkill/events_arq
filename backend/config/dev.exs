@@ -57,12 +57,28 @@ config :logger, :console, format: "[$level] $message\n"
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20
 
+aws_host = System.get_env("AWS_HOST")
+aws_region = System.get_env("AWS_REGION")
+aws_port = System.get_env("AWS_PORT")
+
 config :ex_aws, :s3,
   scheme: "http://",
-  region: System.get_env("AWS_S3_REGION"),
-  host: System.get_env("AWS_S3_URL"),
-  port: System.get_env("AWS_S3_PORT"),
+  region: aws_region,
+  host: aws_host,
+  port: aws_port,
   bucket: System.get_env("AWS_S3_BUCKET")
+
+config :ex_aws, :sqs,
+  scheme: "http://",
+  region: aws_region,
+  host: aws_host,
+  port: aws_port,
+  base_queue_url: "http://#{aws_host}:#{aws_port}/000000000000/",
+  new_files_queue: System.get_env("AWS_SQS_NEW_FILES_QUEUE"),
+  general_events_queue: System.get_env("AWS_SQS_GENERAL_EVENTS_QUEUE")
+
+config :events_arq_backend, :broadway,
+  producer_module: {BroadwaySQS.Producer, config: [region: aws_region]}
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
