@@ -48,11 +48,15 @@ defmodule EventsArqBackend.QueueWorkers.BroadwayNewFileEvents do
       }
       when event_name in ["ObjectCreated:Put", "ObjectCreated:Post"] ->
         data = %{
-          bucket_name: bucket_name,
-          entity_id: entity_id,
-          object_key: object_key,
-          object_size: object_size,
-          inserted_at: event_time
+          event: "new_file",
+          timestamp: DateTime.utc_now(),
+          metadata: %{
+            bucket_name: bucket_name,
+            entity_id: entity_id,
+            object_key: object_key,
+            object_size: object_size,
+            inserted_at: event_time
+          }
         }
 
         BroadwayGeneralEvents.insert_message(data)

@@ -1,5 +1,6 @@
 // constants
 const URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
+const WEBSOCKET_URL = process.env.REACT_APP_API_WEBSOCKET_URL || "ws://localhost:4000/socket";
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
@@ -40,6 +41,8 @@ async function getPresignedUrl() {
 }
 
 const api = {
+  api_url: URL,
+  websocket_url: WEBSOCKET_URL,
   getPresignedUrl,
 };
 

@@ -3,6 +3,8 @@ defmodule EventsArqBackend.QueueWorkers.BroadwayGeneralEvents do
   use Broadway
 
   alias Broadway.Message
+  alias EventsArqBackend.Generator
+  alias EventsArqBackend.AWS.SqsClient
 
   def start_link(_opts) do
     {module, opts} = producer_module()
@@ -26,11 +28,9 @@ defmodule EventsArqBackend.QueueWorkers.BroadwayGeneralEvents do
         %{"Message" => message} -> Jason.decode!(message)
         message -> message
       end
+      |> Map.put("id", Generator.generate_unique_ref())
 
-    IO.inspect(decoded_data, label: "*****************")
-
-    # do something with the data
-    # send notification
+    EventsArqBackendWeb.Endpoint.broadcast!("room:lobby", "new_message", decoded_data)
 
     Message.update_data(message, fn _data -> decoded_data end)
   end
